@@ -30,7 +30,7 @@ char **stringToTokens(char *str)
 	int i = 0;
 	const char separator[] = " ";
 	int spaces = nbr_spaces(str);
-	char **tokens = malloc(sizeof(char *) * (spaces + 1));
+	char **tokens = (char **)malloc(sizeof(char **) * BUFSIZ);
 	char *token;
 
 	if (!tokens)

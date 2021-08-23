@@ -7,16 +7,17 @@ extern char **environ;
  * @cmd: command to run
  * Return: 0 on success1 -1 if cmd is exit and 1 on any other error
  */
-int execute(char **cmd, char *main_path)
+int execute(char **cmd, char *main_path, char **envp)
 {
-	char *command = (char *)*(cmd + 0);
+	char **command = malloc(sizeof(char **) * BUFSIZ);
+	command = cmd;
 
 	pid_t child_pid;
 	int status;
 	//main_path = (char *)malloc(sizeof(char *));
 
-	if (strncmp("exit", cmd[0], 4) == 0)
-		return (-1);
+	//if (strncmp("exit", command[0], 4) == 0)
+	//return (-1);
 
 	child_pid = fork();
 
@@ -27,13 +28,23 @@ int execute(char **cmd, char *main_path)
 	}
 	else if (child_pid == 0)
 	{
-		strcat(main_path, "/");
-		strcat(main_path, cmd[0]);
-		execve(main_path, cmd, NULL);
-
-		if (execve(main_path, cmd, NULL) == -1)
+		if (**(cmd + 0) == '/')
 		{
-			perror("Error");
+			execve(*(cmd + 0), cmd, environ);
+			if (execve(*(cmd + 0), cmd, environ) == -1)
+			{
+				perror("./shell");
+			}
+		}
+		else
+		{
+			_strcat(main_path, "/");
+			_strcat(main_path, cmd[0]);
+			execve(main_path, cmd, environ);
+			if (execve(main_path, cmd, environ) == -1)
+			{
+				perror("./shell");
+			}
 		}
 		/* if (strcmp("env", cmd[0]) == 0)
 		{
@@ -72,7 +83,7 @@ char* get_path(char* path)
 	cutpath = strtok(path, ":");
 	while (cutpath != NULL)
 	{
-		if (!strcmp(cutpath, "/usr/bin"))
+		if (!_strcmp(cutpath, "/usr/bin"))
 			main_path = cutpath;
 		cutpath = strtok(NULL, ":");
 	}
@@ -97,10 +108,12 @@ int main(int argc, char **argv)
 	char *buffer;
 	char *path;
 	char *main_path = (char *)malloc(sizeof(char *) * bufsize);
+	size_t character;
+	char *envp[] = {"$USER=dexter"};
 
 	if (argc >= 2)
 	{
-		/*TODO: Handle cases where there is no argument, only the command*/
+	/*TODO: Handle cases where there is no argument, only the command*/
 		if (execve(argv[1], argv, NULL) == -1)
 		{
 			perror("Error");
@@ -122,21 +135,24 @@ int main(int argc, char **argv)
 		if (isatty(fileno(stdin)))
 		{
 			isPipe = 1;
-			_puts("cisfun#: ");
+			_puts("user@dexter$ ");
 		}
 
-		getline(&buffer, &bufsize, stdin);
+		character = getline(&buffer, &bufsize, stdin);
+		if (character == EOF)
+			exit (1);
 		buffer[_strlen(buffer) - 1] = '\0';
-		tokens = stringToTokens(buffer);
-		//path = getenv("PATH");
 
-		//main_path = get_path(path);
-		//printf("%s", main_path);
-		response = execute(tokens, main_path);
+		if (!_strcmp("exit", buffer))
+		{
+			exit (1);
+		}
+		tokens = stringToTokens(buffer);
+		response = execute(tokens, main_path, envp);
 	} while (isPipe && response != -1);
 	free(buffer);
 	free(main_path);
-	free(tokens);
+	//free(tokens);
 
 	return (0);
 }
