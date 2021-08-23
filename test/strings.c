@@ -1,3 +1,5 @@
+#include "shell.h"
+
 /**
  * _strlen - find the length of a string
  * @s: pointer to the string to check
@@ -84,4 +86,50 @@ int _strcmp(char *s1, char *s2)
 		i++;
 	}
 	return (0);
+}
+/**
+ * _strtok - compare string values
+ * @s: input value
+ * @d: input value
+ *
+ * Return: s
+ */
+
+char* _strtok(char* s, char d)
+{
+	// Stores the state of string
+	static char* input = NULL;
+
+
+	if (s != NULL)
+		input = s;
+
+
+	if (input == NULL)
+		return NULL;
+
+	char *result = (char *)malloc(sizeof(_strlen(input) + 1));
+	int i = 0;
+
+	for (; input[i] != '\0'; i++) {
+
+		// If delimeter is not reached
+		// then add the current character
+		// to result[i]
+		if (input[i] != d)
+			result[i] = input[i];
+
+		// Else store the string formed
+		else {
+			result[i] = '\0';
+			input = input + i + 1;
+			return result;
+		}
+	}
+
+	// Case when loop ends
+	result[i] = '\0';
+	input = NULL;
+
+	return result;
 }

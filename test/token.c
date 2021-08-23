@@ -1,4 +1,6 @@
 #include "shell.h"
+#include <stddef.h>
+#include <stdlib.h>
 
 /**
  * *nbr_spaces - return the number of occurent of a string
@@ -28,7 +30,6 @@ unsigned int nbr_spaces(char *s)
 char **stringToTokens(char *str)
 {
 	int i = 0;
-	const char separator[] = " ";
 	int spaces = nbr_spaces(str);
 	char **tokens = (char **)malloc(sizeof(char **) * BUFSIZ);
 	char *token;
@@ -39,12 +40,12 @@ char **stringToTokens(char *str)
 		exit(1);
 	}
 
-	token = strtok(str, separator);
+	token = _strtok(str, ' ');
 
 	while (token != NULL)
 	{
 		tokens[i] = token;
-		token = strtok(NULL, separator);
+		token = _strtok(NULL, ' ');
 		i++;
 	}
 	tokens[i] = NULL;

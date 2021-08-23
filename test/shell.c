@@ -80,12 +80,12 @@ char* get_path(char* path)
 {
 	char *main_path;
 	char* cutpath;
-	cutpath = strtok(path, ":");
+	cutpath = _strtok(path, ':');
 	while (cutpath != NULL)
 	{
 		if (!_strcmp(cutpath, "/usr/bin"))
 			main_path = cutpath;
-		cutpath = strtok(NULL, ":");
+		cutpath = _strtok(NULL, ':');
 	}
 	return (main_path);
 }
@@ -151,8 +151,8 @@ int main(int argc, char **argv)
 		response = execute(tokens, main_path, envp);
 	} while (isPipe && response != -1);
 	free(buffer);
-	free(main_path);
-	//free(tokens);
+	//free(main_path);
+	free(tokens);
 
 	return (0);
 }
