@@ -10,6 +10,7 @@
 int _strlen(const char *s)
 {
 	int i = 0;
+
 	while (s[i])
 		i++;
 
@@ -95,10 +96,11 @@ int _strcmp(char *s1, char *s2)
  * Return: s
  */
 
-char* _strtok(char* s, char d)
+char *_strtok(char *s, char d)
 {
-	// Stores the state of string
-	static char* input = NULL;
+	char *result;
+	int i = 0;
+	static char *input;
 
 
 	if (s != NULL)
@@ -106,30 +108,25 @@ char* _strtok(char* s, char d)
 
 
 	if (input == NULL)
-		return NULL;
+		return (NULL);
+	result = (char *)malloc(sizeof(_strlen(input) + 1));
 
-	char *result = (char *)malloc(sizeof(_strlen(input) + 1));
-	int i = 0;
-
-	for (; input[i] != '\0'; i++) {
-
-		// If delimeter is not reached
-		// then add the current character
-		// to result[i]
+	for (; input[i] != '\0'; i++)
+	{
 		if (input[i] != d)
 			result[i] = input[i];
 
-		// Else store the string formed
-		else {
+
+		else
+		{
 			result[i] = '\0';
 			input = input + i + 1;
-			return result;
+			return (result);
 		}
 	}
 
-	// Case when loop ends
 	result[i] = '\0';
 	input = NULL;
 
-	return result;
+	return (result);
 }

@@ -30,7 +30,6 @@ unsigned int nbr_spaces(char *s)
 char **stringToTokens(char *str)
 {
 	int i = 0;
-	int spaces = nbr_spaces(str);
 	char **tokens = (char **)malloc(sizeof(char **) * BUFSIZ);
 	char *token;
 
